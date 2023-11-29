@@ -100,7 +100,7 @@ static PyObject *py_cleanup(PyObject *self, PyObject *args, PyObject *kwargs)
          // set everything back to input
          if (gpio_direction[gpio] != -1) {
             setup_gpio(gpio, INPUT, PUD_OFF);
-            gpio_direction[i] = -1;
+            gpio_direction[gpio] = -1;
             found = 1;
          }
       }
@@ -122,7 +122,6 @@ static PyObject *py_setup_channel(PyObject *self, PyObject *args, PyObject *kwar
    int pud = PUD_OFF + PY_PUD_CONST_OFFSET;
    int initial = -1;
    static char *kwlist[] = {"channel", "direction", "pull_up_down", "initial", NULL};
-   int func;
 
    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ii|ii", kwlist, &channel, &direction, &pud, &initial))
       return NULL;
@@ -156,8 +155,8 @@ static PyObject *py_setup_channel(PyObject *self, PyObject *args, PyObject *kwar
    if (mmap_gpio_mem())
       return NULL;
 
-   func = gpio_function(gpio);//!!!! has not modify 
 #if NP_DEBUG
+   int func = gpio_function(gpio);
    if (gpio_warnings &&                             // warnings enabled and
        ((func != 0 && func != 1) ||                 // (already one of the alt functions or
        (gpio_direction[gpio] == -1 && func == 1)))  // already an output not set from this program)
@@ -263,7 +262,7 @@ static unsigned int chan_from_gpio(unsigned int gpio)
    if (gpio_mode == MODE_RAW)
        return -1;  //Not supported in RAW mode as there is not always a mapping
    for (chan=1; chan<65; chan++)
-      if (*(*pin_to_gpio+chan) == gpio)
+      if (*(*pin_to_gpio+chan) == (int)gpio)
          return chan;
    return -1;
 }

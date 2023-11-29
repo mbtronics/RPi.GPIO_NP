@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include "c_gpio.h"
@@ -84,7 +85,7 @@ int setup(void)
 	gpio_map = (uint32_t *)mmap( (caddr_t)gpio_mem, BLOCK_SIZE, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_FIXED, mem_fd, GPIO_BASE_BP);
 
 	if(nanopiDebug)
-		printf("gpio_mem = 0x%x\t gpio_map = 0x%x\n",gpio_mem,gpio_map);
+		printf("gpio_mem = 0x%x\t gpio_map = 0x%x\n",(unsigned int)gpio_mem,(unsigned int)gpio_map);
 
 	if ((uint32_t)gpio_map < 0)
 		return SETUP_MMAP_FAIL;
@@ -100,7 +101,7 @@ uint32_t readl(uint32_t addr)
 	val = *(gpio_map + mmap_seek);
 
 	if(nanopiDebug)
-		printf("mmap_base = 0x%x\t mmap_seek = 0x%x\t gpio_map = 0x%x\t total = 0x%x\n",mmap_base,mmap_seek,gpio_map,(gpio_map + mmap_seek));
+		printf("mmap_base = 0x%x\t mmap_seek = 0x%x\t gpio_map = 0x%x\t total = 0x%x\n",mmap_base,mmap_seek,(unsigned int)gpio_map,(unsigned int)(gpio_map + mmap_seek));
 
 	return val;
 }

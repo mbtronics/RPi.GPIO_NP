@@ -64,35 +64,35 @@ unsigned int gpioToSysPin(unsigned int gpio)
 {
     return gpio;
 #if 0
-	int i;
-	int lenBP = sizeof(physToGpioR3)/sizeof(int);
-	unsigned int gpioSys;
-	
-	//There is no matter with mode
-	for(i = 0;i < lenBP;i++)
-	{
-		if(*(physToGpio_neo + i) == gpio)
-		{
-			gpioSys = *(physToGpioR3 + i);
-			return gpioSys;
-		}
-	}
+    int i;
+    int lenBP = sizeof(physToGpioR3)/sizeof(int);
+    unsigned int gpioSys;
+
+    //There is no matter with mode
+    for(i = 0;i < lenBP;i++)
+    {
+        if(*(physToGpio_neo + i) == gpio)
+        {
+            gpioSys = *(physToGpioR3 + i);
+            return gpioSys;
+        }
+    }
 #endif
 }
 /************* /sys/class/gpio functions ************/
 int gpio_export(unsigned int gpio)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
+    unsigned int gpioSys = gpioToSysPin(gpio);
     int fd, len;
     char str_gpio[3];
 
     if ((fd = open("/sys/class/gpio/export", O_WRONLY)) < 0)
-       return -1;
+        return -1;
 
     len = snprintf(str_gpio, sizeof(str_gpio), "%d", gpioSys);
     
     if(nanopiDebug)
-		printf("\n /sys/class/gpio/export %d \n",gpioSys);
+        printf("\n /sys/class/gpio/export %d \n",gpioSys);
     
     write(fd, str_gpio, len);
     close(fd);
@@ -102,7 +102,7 @@ int gpio_export(unsigned int gpio)
 
 int gpio_unexport(unsigned int gpio)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
+    unsigned int gpioSys = gpioToSysPin(gpio);
     int fd, len;
     char str_gpio[3];
 
@@ -111,7 +111,7 @@ D    if ((fd = open("/sys/class/gpio/unexport", O_WRONLY)) < 0)
 
     len = snprintf(str_gpio, sizeof(str_gpio), "%d", gpioSys);
     if(nanopiDebug)
-		printf("\n /sys/class/gpio/unexport %d \n",gpioSys);
+        printf("\n /sys/class/gpio/unexport %d \n",gpioSys);
     
     write(fd, str_gpio, len);
     close(fd);
@@ -121,18 +121,18 @@ D    if ((fd = open("/sys/class/gpio/unexport", O_WRONLY)) < 0)
 
 int gpio_set_direction(unsigned int gpio, unsigned int in_flag)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
-	int fd;
+    unsigned int gpioSys = gpioToSysPin(gpio);
+    int fd;
     char filename[33];
 
 D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/direction", gpioSys);
-	if(nanopiDebug)
-		printf("\n /sys/class/gpio/gpio%d/direction \n", gpioSys);
+    if(nanopiDebug)
+        printf("\n /sys/class/gpio/gpio%d/direction \n", gpioSys);
 
     if ((fd = open(filename, O_WRONLY)) < 0){
-		//printf("open file not succeed !\n");
+        //printf("open file not succeed !\n");
         return -1;
-	}
+    }
 
     if (in_flag)
         write(fd, "in", 3);
@@ -145,13 +145,13 @@ D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/direction", gp
 
 int gpio_set_edge(unsigned int gpio, unsigned int edge)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
+    unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
     char filename[28];
 
 D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/edge", gpioSys);
-	 if(nanopiDebug)
-		printf("\n /sys/class/gpio/gpio%d/edge \n", gpioSys);
+    if(nanopiDebug)
+        printf("\n /sys/class/gpio/gpio%d/edge \n", gpioSys);
 
     if ((fd = open(filename, O_WRONLY)) < 0)
         return -1;
@@ -163,7 +163,7 @@ D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/edge", gpioSys
 
 int gpio_check(unsigned int gpio)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
+    unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
     char filename[23];
 
@@ -177,7 +177,7 @@ D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d", gpioSys);
 
 int gpio_set_value(unsigned int gpio, unsigned int value)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
+    unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
     char filename[29];
 
@@ -196,10 +196,10 @@ D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSy
 
 int gpio_get_value(unsigned int gpio)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
+    unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
     char filename[29];
-	char buf;
+    char buf;
 
 D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSys);
     if ((fd = open(filename, O_RDONLY)) < 0)
@@ -218,7 +218,7 @@ D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSy
 
 int gpio_set_pull(unsigned int gpio, unsigned int value)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
+    unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
     char filename[29];
 
@@ -226,12 +226,12 @@ D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/pull", gpioSys
     if ((fd = open(filename, O_WRONLY)) < 0)
         return -1;
 
-	if (value == PUD_DOWN) //pull down
+    if (value == PUD_DOWN) //pull down
         write(fd, "down", 5);
-	else if (value == PUD_UP) //pull up
+    else if (value == PUD_UP) //pull up
         write(fd, "up", 3);
-	else //default == PUD_OFF, pull disable
-	    write(fd, "disable", 8);
+    else //default == PUD_OFF, pull disable
+        write(fd, "disable", 8);
 
     close(fd);
     return 0;
@@ -239,13 +239,13 @@ D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/pull", gpioSys
 
 int open_value_file(unsigned int gpio)
 {
-	unsigned int gpioSys = gpioToSysPin(gpio);
+    unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
     char filename[29];
 
     // create file descriptor of value file
-	snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSys);
-	if ((fd = open(filename, O_RDONLY | O_NONBLOCK)) < 0)
+    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSys);
+    if ((fd = open(filename, O_RDONLY | O_NONBLOCK)) < 0)
         return -1;
     return fd;
 }
@@ -472,10 +472,9 @@ int event_detected(unsigned int gpio)
 }
 
 void event_cleanup(unsigned int gpio)
-// gpio of -666 means clean every channel used
 {
     while (gpio_list != NULL) {
-        if ((gpio == -666) || (gpio_list->gpio == gpio))
+        if (gpio_list->gpio == gpio)
             remove_edge_detect(gpio_list->gpio);
     }
     thread_running = 0;
@@ -483,7 +482,10 @@ void event_cleanup(unsigned int gpio)
 
 void event_cleanup_all(void)
 {
-   event_cleanup(-666);
+    while (gpio_list != NULL) {
+        remove_edge_detect(gpio_list->gpio);
+    }
+    thread_running = 0;
 }
 
 int gpio_event_added(unsigned int gpio)

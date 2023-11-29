@@ -105,7 +105,7 @@ static int getFieldValueInCpuInfo(char* hardware, int hardwareMaxLen, char* revi
             break;
         } else {
             j=0;
-            for(i=0; i<strlen(lineUntrim);i++) {
+            for(i=0; i < (int)strlen(lineUntrim); i++) {
                 if (lineUntrim[i] == ' ' || lineUntrim[i] == '\t' || lineUntrim[i] == '\r' || lineUntrim[i] == '\n') {
                 } else {
                     line[j++]=lineUntrim[i];
@@ -118,9 +118,11 @@ static int getFieldValueInCpuInfo(char* hardware, int hardwareMaxLen, char* revi
                 #define GetKeyValue(isGot,valP,keyName,buff,buffLen) \
                 if (isGot==0) { \
                     strcpy(line2, line); \
-                    if (valP=strtok(line2, ":")) { \
+                    valP=strtok(line2, ":"); \
+                    if (valP) { \
                         if (strncasecmp(valP,keyName,strlen(keyName))==0) { \
-                            if (valP=strtok(0, ":")) { \
+                            valP=strtok(0, ":"); \
+                            if (valP) { \
                                 memset(buff,0,buffLen); \
                                 strncpy(buff,valP,buffLen-1); \
                                 isGot=1; \
@@ -161,7 +163,7 @@ static int getAllwinnerBoardID(char* boardId, int boardIdMaxLen )
             break;
         } else {
             j=0;
-            for(i=0; i<strlen(lineUntrim);i++) {
+            for(i=0; i < (int)strlen(lineUntrim); i++) {
                 if (lineUntrim[i] == ' ' || lineUntrim[i] == '\t' || lineUntrim[i] == '\r' || lineUntrim[i] == '\n') {
                 } else {
                     line[j++]=lineUntrim[i];
@@ -171,10 +173,12 @@ static int getAllwinnerBoardID(char* boardId, int boardIdMaxLen )
             n = strlen(line);
             if (n>0) {
                 //LOGD("LINE: %s\n", line);
-                if (p = strtok(line, ":")) {
+                p = strtok(line, ":");
+                if (p) {
                     if (strncasecmp(p, sunxi_board_id_fieldname, strlen(sunxi_board_id_fieldname)) == 0) {
                         //LOGD("\t\tkey=\"%s\"\n", p);
-                        if (p = strtok(0, ":")) {
+                        p = strtok(0, ":");
+                        if (p) {
                             //LOGD("\t\tv=\"%s\"\n", p);
                             memset(boardId,0,boardIdMaxLen);
                             strncpy(boardId, p, boardIdMaxLen-1);
@@ -214,7 +218,7 @@ int getBoardType(BoardHardwareInfo** retBoardInfo) {
 
     //a64 and amlogic, only check hardware
     if (strncasecmp(hardware, a64, strlen(a64)) == 0 || strncasecmp(hardware, amlogic, strlen(amlogic)) == 0) {
-        for (i=0; i<(sizeof(gAllBoardHardwareInfo)/sizeof(BoardHardwareInfo)); i++) {
+        for (i=0; i < (int)(sizeof(gAllBoardHardwareInfo)/sizeof(BoardHardwareInfo)); i++) {
             if (strncasecmp(gAllBoardHardwareInfo[i].kernelHardware, hardware, strlen(gAllBoardHardwareInfo[i].kernelHardware)) == 0) {
                 if (retBoardInfo != 0) {
                     *retBoardInfo = &gAllBoardHardwareInfo[i];
@@ -231,7 +235,7 @@ int getBoardType(BoardHardwareInfo** retBoardInfo) {
         int ret = getAllwinnerBoardID(allwinnerBoardID, sizeof(allwinnerBoardID));
         if (ret == 0) {
             //LOGD("got boardid: %s\n", allwinnerBoardID);
-            for (i=0; i<(sizeof(gAllBoardHardwareInfo)/sizeof(BoardHardwareInfo)); i++) {
+            for (i=0; i < (int)(sizeof(gAllBoardHardwareInfo)/sizeof(BoardHardwareInfo)); i++) {
                 //LOGD("\t{{ enum, start compare[%d]: %s <--> %s\n", i, gAllBoardHardwareInfo[i].kernelHardware, hardware);
                 if (strncasecmp(gAllBoardHardwareInfo[i].kernelHardware, hardware, strlen(gAllBoardHardwareInfo[i].kernelHardware)) == 0) {
                     //LOGD("\t\tMATCH %s\n", hardware);
@@ -258,13 +262,13 @@ int getBoardType(BoardHardwareInfo** retBoardInfo) {
         return -1;
     }
 
-    char revision2[255];
+    char revision2[257];
     sprintf(revision2, "0x%s", revision);
     int iRev;
     iRev = strtol(revision2, NULL, 16);
 
     // other, check hardware and revision
-    for (i=0; i<(sizeof(gAllBoardHardwareInfo)/sizeof(BoardHardwareInfo)); i++) {
+    for (i=0; i < (int)(sizeof(gAllBoardHardwareInfo)/sizeof(BoardHardwareInfo)); i++) {
         if (strncasecmp(gAllBoardHardwareInfo[i].kernelHardware, hardware, strlen(gAllBoardHardwareInfo[i].kernelHardware)) == 0) {
             if (gAllBoardHardwareInfo[i].kernelRevision == -1
                     || gAllBoardHardwareInfo[i].kernelRevision == iRev
