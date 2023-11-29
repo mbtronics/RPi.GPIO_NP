@@ -266,6 +266,8 @@ const int physToGpioR3 [MAX_PIN_COUNT] =//head num map to BCMpin
 } ;
 */
 
+const int (*pin_to_gpio)[MAX_PIN_COUNT];
+int gpio_direction[MAX_PIN_COUNT];
 int setup_error = 0;
 int module_setup = 0;
 int revision = -1;

@@ -1,8 +1,8 @@
 This is a modified version RPi.GPIO for NanoPi NEO/NEO2. We call it RPi.GPIO_NP.
-It is based on the original [RPi.GPIO](https://pypi.python.org/pypi/RPi.GPIO).
+It's a fork of the original FriendlyARM [RPi.GPIO_NP](https://github.com/friendlyarm/RPi.GPIO_NP)
+with compiler bugfixes and backports from original [RPi.GPIO].
+Which is based on the original [RPi.GPIO](https://pypi.python.org/pypi/RPi.GPIO).
 The RPi.GPIO_NP API usage are the same to the original RPi.GPIO.
-You can donwload the RPi.GPIO_NP from:
-https://github.com/friendlyarm/RPi.GPIO_NP
 
 ## Currently supported boards (Allwinner H3/H5)
 NanoPi Neo  
@@ -22,9 +22,9 @@ Log into your nano board via SSH, open a terminal and install the WiringNP libra
 ```
 sudo apt-get update
 sudo apt-get install python-dev
-git clone https://github.com/friendlyarm/RPi.GPIO_NP
+git clone https://github.com/angelijanos/RPi.GPIO_NP
 cd RPi.GPIO_NP
-python setup.py install                 
+python setup.py install
 sudo python setup.py install
 ```
     
