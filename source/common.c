@@ -24,7 +24,7 @@ SOFTWARE.
 #include "c_gpio.h"
 #include "common.h"
 
-int gpio_mode = MODE_RAW;
+int gpio_mode = MODE_UNKNOWN;
 
 const int physToGpio_neo [MAX_PIN_COUNT] ={
     -1, 
@@ -308,6 +308,8 @@ int is_valid_raw_port(int channel)
 
 int get_gpio_number(int channel, unsigned int *gpio)
 {
+    mode = MODE_RAW;
+
     // check channel number is in range
     if ( (gpio_mode == BCM && (channel < 0 || channel > MAX_PIN_COUNT))
       || (gpio_mode == BOARD && (channel < 1 || channel > MAX_PIN_COUNT)) )
