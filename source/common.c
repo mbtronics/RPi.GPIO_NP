@@ -308,7 +308,7 @@ int is_valid_raw_port(int channel)
 
 int get_gpio_number(int channel, unsigned int *gpio)
 {
-    mode = MODE_RAW;
+    gpio_mode = MODE_RAW;
 
     // check channel number is in range
     if ( (gpio_mode == BCM && (channel < 0 || channel > MAX_PIN_COUNT))
