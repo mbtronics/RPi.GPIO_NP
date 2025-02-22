@@ -24,7 +24,7 @@ SOFTWARE.
 #include "c_gpio.h"
 #include "common.h"
 
-int gpio_mode = MODE_UNKNOWN;
+int gpio_mode = MODE_RAW;
 
 const int physToGpio_neo [MAX_PIN_COUNT] ={
     -1, 
